@@ -4,10 +4,10 @@ manifests:
   rawYaml:
     - ./infra/k8s/*
 build:
-  googleCloudBuild:
-    projectId: horizontal-cab-375808
+  local:
+    push: false
   artifacts:
-    - image: us.gcr.io/horizontal-cab-375808/auth
+    - image: shruthisiva95/auth
       context: auth
       docker:
         dockerfile: Dockerfile

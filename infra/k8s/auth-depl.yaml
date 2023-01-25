@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: auth
-          image: us.gcr.io/horizontal-cab-375808/auth
+          image: shruthisiva95/auth
 ---
 apiVersion: v1
 kind: Service
