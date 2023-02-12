@@ -1,6 +1,11 @@
 import express, { Request, Response } from "express";
 // Validates body, query strings, params on the request etc.
-import { body, validationResult } from "express-validator";
+import { body } from "express-validator";
+import jwt from "jsonwebtoken";
+
+import { User } from "../models/user";
+import { BadRequestError } from "../errors/bad-request-error";
+import { validateRequest } from "../middlewares/validate-request";
 
 const router = express.Router();
 
@@ -13,20 +18,35 @@ router.post(
       .isLength({ min: 4, max: 20 })
       .withMessage("Password must be between 4 and 20 characters"),
   ],
-  (req: Request, res: Response) => {
-    // When the two validation steps above execute and if there's an error that's caught, they append some properties on the request object. The validationResult function is used to parse these values.
-    const errors = validationResult(req);
+  validateRequest,
+  async (req: Request, res: Response) => {
+    const { email, password } = req.body;
+    const existingUser = await User.findOne({ email });
 
-    if (!errors.isEmpty()) {
-      // return errors as an array of errors
-      return res.status(400).send(errors.array());
+    if (existingUser) {
+      throw new BadRequestError("Email in use");
     }
 
-    console.log("Creating a user");
+    const user = User.build({ email, password });
+    // Just instantiating the User model does not create a user. We need to use user.save() to save to MongoDB.
+    await user.save();
 
-    const { email, password } = req.body;
+    // Generate JWT
+    const userJwt = jwt.sign(
+      {
+        id: user.id,
+        email: user.email,
+      },
+      process.env.JWT_KEY!
+    );
 
-    res.send({});
+    // Store it on the session object. req.session is being made available to us by the cookie-session middleware.
+    // The cookie-session middleware takes the value assigned to req.session ({jwt: userJwt}), base64 encodes it and sends that value over as the cookie.
+    req.session = {
+      jwt: userJwt,
+    };
+
+    res.status(201).send(user);
   }
 );
 

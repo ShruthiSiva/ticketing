@@ -15,6 +15,13 @@ spec:
       containers:
         - name: auth
           image: shruthisiva95/auth
+          env:
+            # Name of the env variable as it shows up inside the auth aplication/pod.
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
 ---
 apiVersion: v1
 kind: Service
