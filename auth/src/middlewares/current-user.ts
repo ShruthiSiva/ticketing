@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 
 interface UserPayload {
   id: string;
-  interface: string;
+  email: string;
 }
 
 // Reaching into an existing type definition and augmenting whatever prperties we want onto a specific interface
