@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { CustomError } from "../errors/custom-error";
 
-// Whenever a middleware function has 4 arguments, it is automatically considered an error handling middleware by express. Ex[press distinguishes between the types of middlewares (error handling or regular) by the number of arguments it accepts. Error handling middlewares are used to capture errors and process them.
+// Whenever a middleware function has 4 arguments, it is automatically considered an error handling middleware by express. Express distinguishes between the types of middlewares (error handling or regular) by the number of arguments it accepts. Error handling middlewares are used to capture errors and process them.
 export const errorHandler = (
   err: Error,
   req: Request,
