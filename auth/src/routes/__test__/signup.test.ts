@@ -2,7 +2,7 @@ import request from "supertest";
 import { app } from "../../app";
 
 it("returns a 201 on successful signup", async () => {
-  // The environment variable was created within a separate pod (as a Secret object). Tests do not talk to the running instance of the application (so if there's networking between pods, that would need to be mocked somehow, like we did with MondoDB). We set this variable in setup.ts for the time being. It's not the best strategy, but gets the error to go away.
+  // The environment variable was created within a separate pod (as a Secret object). Tests do not talk to the running instance of the application (so if there's networking between pods, that would need to be mocked somehow, like we did with MongoDB). We set this variable in setup.ts for the time being. It's not the best strategy, but gets the error to go away.
   return request(app)
     .post("/api/users/signup")
     .send({

@@ -60,7 +60,7 @@ userSchema.pre("save", async function (done) {
 userSchema.statics.build = (attrs: UserAttrs) => new User(attrs);
 
 // Feed the schema into the model
-// The angular brackets are like passing arguments into
+// The angular brackets are like passing arguments into the type definition of mongoose.model()
 const User = mongoose.model<UserDoc, UserModel>("User", userSchema);
 
 export { User };

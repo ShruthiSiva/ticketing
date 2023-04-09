@@ -22,7 +22,7 @@ app.use(
     // cookies need not be encrypted since JWT is tamper resistant.
     signed: false,
     // cookies should only be sent over a HTTPS connection. Do not manage cookies (send cookies) if the user is connecting over an HTTP connection.
-    // We check the node env to determine the value for this property. If we're running the app in dev/stsge/production, set this value to "true". If we're running it in "test" mode, set it to "false" since supertest can only send out HTTP requests. When a request is made via HTTP, cookies won't be set on the response headers. So we toggle this property to "false" for testing cookies using supertest.
+    // We check the node env to determine the value for this property. If we're running the app in dev/stage/production, set this value to "true". If we're running it in "test" mode, set it to "false" since supertest can only send out HTTP requests. When a request is made via HTTP, cookies won't be set on the response headers. So we toggle this property to "false" for testing cookies using supertest.
     secure: process.env.NODE_ENV !== "test",
   })
 );
