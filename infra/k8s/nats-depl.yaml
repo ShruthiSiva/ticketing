@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nats-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nats
+  template:
+    metadata:
+      labels:
+        app: nats
+    spec:
+      containers:
+        - name: nats
+          image: nats-streaming:0.17.0
+          # While running a Docker container using the command line, we are allowed to specify multiple command line arguments. The nats-streaming server container also allows us to specify multiple command line options (https://hub.docker.com/_/nats-streaming). When a container is built out of this image, we would like for these args to be executed, as specified in the args array. A flag is generally followed by the value we want to provide.
+          args: [
+              "-p",
+              "4222",
+              "-m",
+              "8222",
+              # hb stands for heartbeat. hbi = 5s means that the server sends a hearbeat to each of its clients every 5s.
+              "-hbi",
+              "5s",
+              # hbt = 5s - how long each client can take to respond back to the heartbeat
+              "-hbt",
+              "5s",
+              # hbf = 2 - number of failures before the server assumes the client is offline/dead.
+              "-hbf",
+              "2",
+              "-SD",
+              "-cid",
+              "ticketing",
+            ]
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nats-srv
+spec:
+  selector:
+    app: nats
+  ports:
+    # We would like to expose 2 ports for this microservice
+    - name: client
+      protocol: TCP
+      port: 4222
+      targetPort: 4222
+    - name: monitoring
+      protocol: TCP
+      port: 8222
+      targetPort: 8222

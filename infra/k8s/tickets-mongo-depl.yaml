@@ -24,7 +24,7 @@ spec:
   selector:
     app: tickets-mongo
   ports:
-    # this name isn't super important and is ust used for loggin purposes
+    # this name isn't super important and is ust used for logging purposes
     - name: db
       protocol: TCP
       #Default port on mongo image from DockerHub
