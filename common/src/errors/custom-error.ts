@@ -1,6 +1,6 @@
 // abstract classes cannot be initialized. An abstract class is only a template definition of methods and variables of a class used by typescript.
 export abstract class CustomError extends Error {
-  // Similar to TS interfaces, where an object must satuistfy properties within it, we use the "abstract" keyword to specify values that must be used while initializing a subclass that extends CustomError.
+  // Similar to TS interfaces, where an object must satistfy properties within it, we use the "abstract" keyword to specify values that must be used while initializing a subclass that extends CustomError.
   abstract statusCode: number;
 
   constructor(message: string) {

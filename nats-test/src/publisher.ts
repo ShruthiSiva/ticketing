@@ -1,4 +1,5 @@
 import nats from "node-nats-streaming";
+import { TicketCreatedPublisher } from "./events/ticket-created-publisher";
 
 console.clear();
 
@@ -8,16 +9,18 @@ const stan = nats.connect("ticketing", "abc", {
   url: "http://localhost:4222",
 });
 
-stan.on("connect", () => {
+stan.on("connect", async () => {
   console.log("Publisher connected to NATS");
 
-  // The NATS server only accepts strings
-  const data = JSON.stringify({
-    id: "123",
-    title: "concert",
-    price: 20,
-  });
+  const publisher = new TicketCreatedPublisher(stan);
 
-  // The first argument is the subject (name of the channel), second is the data to be passed, third is the callback to be invoked after the publish event is complete.
-  stan.publish("ticket:created", data, () => console.log("Event Published"));
+  try {
+    await publisher.publish({
+      id: "123",
+      title: "concert",
+      price: 20,
+    });
+  } catch (err) {
+    console.error(err);
+  }
 });
