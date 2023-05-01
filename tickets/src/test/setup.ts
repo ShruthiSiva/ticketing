@@ -11,6 +11,9 @@ declare global {
 
 let mongo: any;
 
+// This will look inside the __mocks__ directory to find a file with the same name. This applies the nats-wrapper mock to all test files.
+jest.mock("../nats-wrapper");
+
 beforeAll(async () => {
   // The environment variable was created within a separate pod (as a Secret object). Tests do not talk to the running instance of the application (so if there's networking between pods, that would need to be mocked somehow, like we did with MongoDB). We set this variable here for the time being. It's not the best strategy, but gets the error to go away.
   process.env.JWT_KEY = "fehuiuw";
@@ -24,6 +27,9 @@ beforeAll(async () => {
 });
 
 beforeEach(async () => {
+  // The mocked nats-wrapper is going to be used in all test files. We want to clear this mock between each test so the data from one test isn't passed to the other test.
+  jest.clearAllMocks();
+
   // Delete all data in the in-memory Db before each test.
   const collections = await mongoose.connection.db.collections();
 
