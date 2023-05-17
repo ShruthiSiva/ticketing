@@ -9,6 +9,11 @@ import {
   currentUser,
 } from "@shruthisivatickets/common";
 
+import { indexOrderRouter } from "./routes";
+import { deleteOrderRouter } from "./routes/delete";
+import { newOrderRouter } from "./routes/new";
+import { showOrderRouter } from "./routes/show";
+
 const app = express();
 
 // requests are being proxied through ingress-nginx before being sent to our auth server. Express doesn't trust a HTTPS connection if it's being sent via a proxy. This line informs express that it's behind a proxy (ingress-nginx) and that it should trust HTTPS traffic as being secure even if it's coming from that proxy.
@@ -27,6 +32,11 @@ app.use(
 );
 
 app.use(currentUser);
+
+app.use(indexOrderRouter);
+app.use(newOrderRouter);
+app.use(showOrderRouter);
+app.use(deleteOrderRouter);
 
 // app.all encompasses get, put, post, delete etc.
 app.all("*", () => {

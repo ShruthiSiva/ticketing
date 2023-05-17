@@ -7,7 +7,7 @@ interface UserAttrs {
   password: string;
 }
 
-// An interface that describes the properties that the User model has. While attempting to use a static function on the model such as User.build({...}),TypeScript throwas an error since it has no idea that the `build` method is a property on the User model (since it was declared as a static). So, we will need this interface to fix this error.
+// An interface that describes the properties that the User model has. While attempting to use a static function on the model such as User.build({...}),TypeScript throws an error since it has no idea that the `build` method is a property on the User model (since it was declared as a static). So, we will need this interface to fix this error.
 interface UserModel extends mongoose.Model<UserDoc> {
   build: (attrs: UserAttrs) => UserDoc;
 }
