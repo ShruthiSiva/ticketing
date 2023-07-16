@@ -2,6 +2,9 @@ import mongoose from "mongoose";
 import { app } from "./app";
 import { natsWrapper } from "./nats-wrapper";
 
+import { TicketCreatedListener } from "./events/listeners/ticket-created-listener";
+import { TicketUpdatedListener } from "./events/listeners/ticket-updated-listener";
+
 const start = async () => {
   // Always check that we have the required env variables during startup.
   if (!process.env.JWT_KEY) {
@@ -38,6 +41,9 @@ const start = async () => {
     // See explanation in /ticketing/nats-test/src/listener.ts
     process.on("SIGINT", () => natsWrapper.client.close());
     process.on("SIGTERM", () => natsWrapper.client.close());
+
+    new TicketCreatedListener(natsWrapper.client).listen();
+    new TicketUpdatedListener(natsWrapper.client).listen();
 
     // Adding a /auth to the end tells mongoose to create that auth DB on its own if it doesn't exist.
     await mongoose.connect(process.env.MONGO_URI);
