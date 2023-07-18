@@ -32,6 +32,7 @@ router.delete(
       ticket: {
         id: order.ticket.id,
       },
+      version: order.version,
     });
 
     // 204 is when a resource is successfully deleted. Here, we're updating the resource, so technically this would be a 200, but we're chosing to keep the 204.

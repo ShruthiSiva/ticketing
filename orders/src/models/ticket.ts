@@ -1,4 +1,5 @@
 import mongoose, { startSession } from "mongoose";
+import { updateIfCurrentPlugin } from "mongoose-update-if-current";
 import { Order, OrderStatus } from "./order";
 
 // We want to have a different definition of a Ticket (to contain only a subset of properties of an original ticket) that is relevant to the orders service. So, we don't want to re-use the model defition in the tickets service.
@@ -11,11 +12,16 @@ interface TicketAttrs {
 interface TicketDoc extends mongoose.Document {
   title: string;
   price: number;
+  version: number;
   isReserved(): Promise<boolean>;
 }
 
 interface TicketModel extends mongoose.Model<TicketDoc> {
   build(attrs: TicketAttrs): TicketDoc;
+  findByEvent(event: {
+    id: string;
+    version: number;
+  }): Promise<TicketDoc | null>;
 }
 
 const ticketSchema = new mongoose.Schema(
@@ -39,6 +45,13 @@ const ticketSchema = new mongoose.Schema(
     },
   }
 );
+
+ticketSchema.set("versionKey", "version");
+ticketSchema.plugin(updateIfCurrentPlugin);
+
+ticketSchema.statics.findByEvent = (event: { id: string; version: number }) => {
+  return Ticket.findOne({ _id: event.id, version: event.version - 1 });
+};
 
 // statics allows us to add a method to the Ticket model. It gets us access to the overall collection
 ticketSchema.statics.build = (attrs: TicketAttrs) =>
