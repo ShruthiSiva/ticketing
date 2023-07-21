@@ -6,6 +6,7 @@ manifests:
 build:
   local:
     push: false
+    # File syncing
   artifacts:
     - image: shruthisiva95/auth
       context: auth
@@ -33,6 +34,14 @@ build:
             src: "src/**/*.ts"
     - image: shruthisiva95/orders
       context: orders
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - dest: .
+            src: "src/**/*.ts"
+    - image: shruthisiva95/expiration
+      context: expiration
       docker:
         dockerfile: Dockerfile
       sync:
