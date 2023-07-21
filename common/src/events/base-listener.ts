@@ -15,8 +15,10 @@ export abstract class Listener<T extends Event> {
   abstract onMessage(data: T["data"], msg: Message): void;
 
   // Stan is the typedef of the NATS client.
-  // private properties cannot be modified outside of the class. By default, properties can be accessed/modified outside a class.
-  private client: Stan;
+  // private properties cannot be modified outside of the class, even the subclasses can't access it.
+  // protected allows the subclass to define it if it wants to.
+  // By default, properties can be accessed/modified outside a class.
+  protected client: Stan;
 
   // protected allows the subclass to define it if it wants to.
   // we are defaulting ackWait to be 5000ms (5sec)
