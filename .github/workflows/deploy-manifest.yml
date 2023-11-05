@@ -1,0 +1,24 @@
+# When there is a change to any file in the infra directory, re-apply all of them.
+name: deploy-manifest
+on:
+  push:
+    branches:
+      - main
+      # if there are changes to files in this dir, it runs this action.
+    paths:
+      - "infra/**"
+jobs:
+  # job-id (this can be anything, but we named it build)
+  build:
+    # comes with docker pre-installed
+    runs-on: ubuntu-latest
+    steps:
+      # this "uses: actions/checkout@v2" step just checks out a repo (tells the action to look at all files in the latest push)
+      - uses: actions/checkout@v2
+      # digitalocean provides this shortcut to install doctl
+      - uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      # change the context so it is now referencing the cluster in DO
+      - run: doctl kubernetes cluster kubeconfig save ticketing
+      - run: kubectl apply -f infra/k8s
