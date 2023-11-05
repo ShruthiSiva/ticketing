@@ -1,18 +1,18 @@
 name: deploy-auth
-on: 
+on:
   push:
-    branches: 
-      - master
+    branches:
+      - main
       # if there are changes to files in this dir, it runs this action.
-    paths: 
-      - 'auth/**'
+    paths:
+      - "auth/**"
 jobs:
-# job-id (this can be anything, but we named it build)
+  # job-id (this can be anything, but we named it build)
   build:
-  # comes with docker pre-installed
+    # comes with docker pre-installed
     runs-on: ubuntu-latest
     steps:
-    # this "uses: actions/checkout@v2" step just checks out a repo (tells the action to look at all files in the latest push)
+      # this "uses: actions/checkout@v2" step just checks out a repo (tells the action to look at all files in the latest push)
       - uses: actions/checkout@v2
       - run: cd auth && docker build -t shruthisiva95/auth .
       - run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
@@ -20,5 +20,3 @@ jobs:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       - run: docker push shruthisiva95/auth
-      
-    
