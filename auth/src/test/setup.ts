@@ -12,7 +12,7 @@ let mongo: any;
 
 beforeAll(async () => {
   // See signup.test.ts for explanation.
-  process.env.JWT_KEY = "fehuiuwd";
+  process.env.JWT_KEY = "fehuiuw";
 
   mongo = await MongoMemoryServer.create();
   // Get the URI from the instance that was just created in memory.
